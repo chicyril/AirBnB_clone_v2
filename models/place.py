@@ -32,15 +32,19 @@ class Place(BaseModel, Base):
     latitude = Column(Float, nullable=True)
     longitude = Column(Float, nullable=True)
     amenity_ids = []
-    reviews = relationship('Review',
-                           cascade='all, delete-orphan',
-                           backref='place')
-    amenities = relationship('Amenity',
-                             secondary='place_amenity',
-                             viewonly=False,
-                             back_populates='place_amenities')
 
-    if models.storage_type != 'db':
+    if models.storage_type == 'db':
+        user = relationship('User', back_populates='places')
+        cities = relationship('City', back_populates='places')
+        reviews = relationship('Review',
+                               cascade='all, delete-orphan',
+                               back_populates='place')
+        amenities = relationship('Amenity',
+                                 secondary='place_amenity',
+                                 viewonly=False,
+                                 back_populates='place_amenities')
+
+    else:
         @property
         def reviews(self):
             """Review getter for filestorage."""

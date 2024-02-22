@@ -11,15 +11,17 @@ class State(BaseModel, Base):
     """Defines a State class for table and instance."""
     __tablename__ = "states"
     name = Column(String(128), nullable=False)
-    cities = relationship('City',
-                          backref='state',
-                          cascade='all, delete-orphan')
 
-    if models.storage_type != 'db':
+    if models.storage_type == 'db':
+        cities = relationship('City',
+                              cascade='all, delete-orphan',
+                              back_populates='state')
+
+    else:
         @property
         def cities(self):
             """get all cities with the current state id
             from filestorage
             """
-            return [city for key, city in models.storage.all(City).items()
+            return [city for city in models.storage.all(City).valuess()
                     if city.state_id == self.id]

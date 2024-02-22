@@ -163,12 +163,8 @@ class HBNBCommand(cmd.Cmd):
             return
 
         key = _cls + "." + _id
-
-        try:
-            del(storage.all()[key])
-            storage.save()
-        except KeyError:
-            print("** no instance found **")
+        obj = storage.all()[key]
+        storage.delete(obj)
 
     def help_destroy(self):
         """Display help for `destroy` command."""
@@ -177,21 +173,17 @@ class HBNBCommand(cmd.Cmd):
 
     def do_all(self, args):
         """ Shows all objects, or all objects of a class"""
-        print_list = []
+
+        _cls = None
 
         if args:
-            args = args.split(' ')[0]
-            if args not in self.__class__.classes:
+            _cls = args.split(' ')[0]
+            if _cls in self.__class__.classes:
+                _cls = self.__class__.classes[_cls]
+            else:
                 print("** class doesn't exist **")
                 return
-            clss = self.__class__.classes[args]
-            for k, v in storage.all(clss).items():
-                print_list.append(str(v))
-        else:
-            for k, v in storage.all().items():
-                print_list.append(str(v))
-
-        print(print_list)
+        print([obj for obj in storage.all(_cls).values()])
 
     def help_all(self):
         """Display help for `all` command."""
