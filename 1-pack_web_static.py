@@ -9,7 +9,9 @@ from os import mkdir
 
 
 def do_pack():
-    """Fabric task for generating .tgz from the contents of web_static dir."""
+    """Fabric task for generating .tgz from the contents of
+    web_static dir.
+    """
     if not isdir("versions"):
         mkdir("versions")
     date_str = datetime.now().strftime("%Y%m%d%H%M%S")

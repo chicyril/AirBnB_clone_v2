@@ -87,6 +87,9 @@ i\
 \tadd_header X-Served-By $hostname;
 ' /etc/nginx/sites-available/botcyba.tech
 
+# ==================================================================
+# ==================================================================
+
 # Make sure /data/ and sub directories exist
 if [ ! -d "/data" ]; then
     sudo mkdir -p /data/web_static/{releases/test,shared}
@@ -100,7 +103,7 @@ if [ ! -f "/data/web_static/releases/test/index.html" ]; then
 fi
 
 # Make sure a new symlink is created every time the script is run
-ln -sfT /data/web_static/releases/test /data/web_static/current
+ln -sf /data/web_static/releases/test /data/web_static/current
 
 # Modify nginx config to make nginx serve the content of
 # /data/web_static/current for /hbnb_static request path.

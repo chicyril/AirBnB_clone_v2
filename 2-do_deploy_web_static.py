@@ -7,9 +7,9 @@ env.hosts = ['52.86.157.4', '100.25.14.58']
 
 def do_deploy(archive_path):
     """Deploy an archive to web-servers."""
+    if not exists(archive_path):
+        return False
     try:
-        if not exists(archive_path):
-            return False
         archive = basename(archive_path)
         dir_name = splitext(archive)[0]
         remote_location = f'/data/web_static/releases/{dir_name}'
@@ -22,7 +22,7 @@ def do_deploy(archive_path):
         run('rm -rf /data/web_static/current')
         run(f'ln -s {remote_location} /data/web_static/current')
         print('New version deployed!')
+        return True
     except Exception as e:
-        print('Error occured: ', e)
+        print("Error: ", e)
         return False
-    return True
