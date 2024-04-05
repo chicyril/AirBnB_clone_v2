@@ -91,19 +91,21 @@ i\
 # ==================================================================
 
 # Make sure /data/ and sub directories exist
-if [ ! -d "/data" ]; then
-    sudo mkdir -p /data/web_static/{releases/test,shared}
-    sudo chown -R "$USER":"$USER" /data
-fi
+sudo mkdir -p /data/web_static/{releases/test,shared}
 
 # Make sure an html doc exist in the /data/web_static/releases/test/ directory
 if [ ! -f "/data/web_static/releases/test/index.html" ]; then
     echo "<html><head></head><body>HBNB Test</body></html>" \
-        > /data/web_static/releases/test/index.html
+        | sudo tee /data/web_static/releases/test/index.html > /dev/null
 fi
 
 # Make sure a new symlink is created every time the script is run
-ln -sf /data/web_static/releases/test /data/web_static/current
+sudo ln -sf /data/web_static/releases/test/ /data/web_static/current
+
+# Give ownership to ubuntu with right permissions.
+sudo chown -R ubuntu:ubuntu /data
+chmod -R 755 /data
+find /data/web_static -type f -exec chmod 754 {} \;
 
 # Modify nginx config to make nginx serve the content of
 # /data/web_static/current for /hbnb_static request path.
@@ -118,9 +120,15 @@ i\
 :end; n; b end
 ' /etc/nginx/sites-available/botcyba.tech
 
-# Make sure nginx is runnig, and changes are loaded and applied
+# Make sure nginx is runnig
 if ! service nginx status &> /dev/null; then
     sudo service nginx restart
-else
+fi
+
+# Test new nginx config before applying it
+if sudo nginx -t &> /dev/null; then
     sudo nginx -s reload
+else
+    echo "Warning: Bad config! nginx did not load it."
+    exit 1
 fi
