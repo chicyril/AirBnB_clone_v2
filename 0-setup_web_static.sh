@@ -93,7 +93,7 @@ i\
 # Make sure /data/ and sub directories exist
 if [ ! -d "/data" ]; then
     sudo mkdir -p /data/web_static/{releases/test,shared}
-    sudo chown -R "$USER":"$USER" /data/
+    sudo chown -R "$USER":"$USER" /data
 fi
 
 # Make sure an html doc exist in the /data/web_static/releases/test/ directory
