@@ -26,7 +26,7 @@ def do_pack():
     archive_path = f"versions/web_static_{date_str}.tgz"
 
     print(f"Packing web_static to {archive_path}")
-    if local(f"tar -czvf {archive_path} web_static/*").failed:
+    if local(f"tar -czvf {archive_path} web_static/").failed:
         return None
 
     size = getsize(archive_path)
@@ -48,17 +48,17 @@ def do_deploy(archive_path):
         f'{archive_path};/tmp/',
         f'mkdir -p {remote_location}',
         f'tar -xzf /tmp/{archive} -C {remote_location} --strip-components=1',
-        f'rm /tmp/{archive}',
-        'rm -rf /data/web_static/current',
+        f'rm -rf /tmp/{archive} /data/web_static/current',
         f'ln -sf {remote_location}/ /data/web_static/current'
     ]
 
     for statement in statements:
         if statement == statements[0]:
-            local, remote = statement.split(';')
-            result = put(local, remote)
+            local_path, remote_path = statement.split(';')
+            result = put(local_path, remote_path)
         else:
             result = run(statement)
+
         if result.failed:
             return False
 

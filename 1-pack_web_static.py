@@ -20,7 +20,7 @@ def do_pack():
     archive_path = f'versions/web_static_{date_str}.tgz'
 
     print(f'Packing web_static to {archive_path}')
-    if local(f'tar -czvf {archive_path} web_static/*').failed:
+    if local(f'tar -czvf {archive_path} web_static/').failed:
         return None
 
     size = getsize(archive_path)

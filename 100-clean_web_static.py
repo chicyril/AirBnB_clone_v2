@@ -13,12 +13,14 @@ def do_clean(number=0):
     number = 1 if int(number) <= 1 else int(number)
 
     with lcd('versions'):
-        archives = sorted(listdir("versions"))[:-number]
-        [local(f'rm {archive}') for archive in archives]
+        old_archives = sorted(listdir("versions"))[:-number]
+        to_rm = ' '.join(old_archives)
+        local(f'rm -f {to_rm}')
 
     with cd('/data/web_static/releases'):
         for host in HOSTS:
             env.host_string = host
-            old_release = ([version for version in run("ls -tr").split()
+            old_releases = ([version for version in run("ls -tr").split()
                             if 'web_static' in version][:-number])
-            [run(f'rm -rf {version}') for version in old_release]
+            to_rm = ' '.join(old_releases)
+            run(f'rm -rf {to_rm}')
