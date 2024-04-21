@@ -18,7 +18,7 @@ class FileStorage:
     def new(self, obj):
         """Adds new object to storage dictionary"""
         key = f'{obj.__class__.__name__}.{obj.id}'
-        if not key in self.all(obj.__class__):
+        if key not in self.all(obj.__class__):
             self.__class__.__objects.update({key: obj})
 
     def save(self):
@@ -66,3 +66,7 @@ class FileStorage:
             if key in self.all():
                 del self.__class__.__objects[key]
                 self.save()
+
+    def close(self):
+        """Call reload."""
+        self.reload()
