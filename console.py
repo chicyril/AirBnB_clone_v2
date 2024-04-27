@@ -65,6 +65,8 @@ class HBNBCommand(cmd.Cmd):
 
     def do_quit(self, line):
         """Exits the command interpreter."""
+        storage.reload()
+        storage.close()
         return True
 
     def help_quit(self):

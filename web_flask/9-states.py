@@ -18,14 +18,15 @@ def states():
 
 @app.route('/states/<id>', strict_slashes=False)
 def state_cities(id):
-    """Displays a html page with citys of that state"""
+    """Displays a html page with cities of a state."""
     state = storage.all(State).get(f'State.{id}')
     return render_template('9-states.html', state=state)
 
 
 @app.teardown_appcontext
 def close(exception=None):
-    """ Method to close the session """
+    """close the db session when the app context is being popped at the end of
+    the current request."""
     storage.close()
 
 
